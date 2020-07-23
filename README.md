@@ -26,6 +26,9 @@ console.log(sketch.query(1515))  //Prints 104
 console.log(sketch.query("foo")) //Prints 1
 ```
 
+## Vanilla JS
+browserify --standalone cmin ./count-min.js -o ./cmin.js
+
 ## Install
 
     npm install count-min-sketch

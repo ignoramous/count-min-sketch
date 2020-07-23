@@ -2,28 +2,13 @@
 
 var defaultHash = require("k-hash")
 
-function CountMinSketch(width, depth, hashFunc) {
-  this.width = width
-  this.depth = depth
-  this.hashFunc = hashFunc
-  this.table = new Uint32Array(width * depth)
-  var scratch
-  var table
-  if(typeof Uint32Array === undefined) {
-    table = new Array(width * depth)
-    for(var i=0, n=table.length; i<n; ++i) {
-      table[i] = 0
-    }
-    scratch = new Array(depth)
-    for(var i=0; i<depth; ++i) {
-      scratch[i] = 0
-    }
-  } else {
-    table = new Uint32Array(width * depth)
-    scratch = new Uint32Array(depth)
-  }
-  this.table = table
-  this.scratch = scratch
+
+function CountMinSketch(width, depth, hashFunc, scratch, table) {
+this.width = width
+this.depth = depth
+this.hashFunc = hashFunc
+this.scratch = scratch || new Uint32Array(depth);
+this.table = table || new Uint8Array(width * depth);
 }
 
 var proto = CountMinSketch.prototype
@@ -93,6 +78,17 @@ proto.query = function(key) {
   return r
 }
 
+
+
+function loadCountMinSketch(accuracy, probIncorrect, scratch, table, hashFunc) {
+  accuracy = accuracy || 0.1
+  probIncorrect = probIncorrect || 0.0001
+  hashFunc = hashFunc || defaultHash
+  var width = Math.ceil(Math.E / accuracy)|0
+  var depth = Math.ceil(-Math.log(probIncorrect))|0
+  return new CountMinSketch(width, depth, hashFunc, scratch, table);
+}
+
 function createCountMinSketch(accuracy, probIncorrect, hashFunc) {
   accuracy = accuracy || 0.1
   probIncorrect = probIncorrect || 0.0001
@@ -102,4 +98,4 @@ function createCountMinSketch(accuracy, probIncorrect, hashFunc) {
   return new CountMinSketch(width, depth, hashFunc)
 }
 
-module.exports = createCountMinSketch
+module.exports = {createCountMinSketch, loadCountMinSketch}
