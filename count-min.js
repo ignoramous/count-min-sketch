@@ -4,11 +4,11 @@ var defaultHash = require("k-hash")
 
 
 function CountMinSketch(width, depth, hashFunc, scratch, table) {
-this.width = width
-this.depth = depth
-this.hashFunc = hashFunc
-this.scratch = scratch || new Uint32Array(depth);
-this.table = table || new Uint8Array(width * depth);
+  this.width = width
+  this.depth = depth
+  this.hashFunc = hashFunc
+  this.scratch = scratch || new Uint32Array(depth);
+  this.table = table || new Uint8Array(width * depth);
 }
 
 var proto = CountMinSketch.prototype
@@ -77,8 +77,6 @@ proto.query = function(key) {
   }
   return r
 }
-
-
 
 function loadCountMinSketch(accuracy, probIncorrect, scratch, table, hashFunc) {
   accuracy = accuracy || 0.1
